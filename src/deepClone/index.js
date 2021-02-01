@@ -29,10 +29,10 @@ function deepClone(source) {
     if (source instanceof Object) {
         let cacheDist = findCache(source);
         if (cacheDist) {
-            console.log('有缓存', cacheDist)
+            // console.log('有缓存', cacheDist)
             return cacheDist;
         } else {
-            console.log('无缓存')
+            // console.log('无缓存')
             let dist;
             if (source instanceof Array) {
                 dist = new Array();
@@ -40,12 +40,18 @@ function deepClone(source) {
                 dist = function () {
                     return source.apply(this, arguments);
                 };
+            } else if (source instanceof RegExp) {
+                dist = new RegExp(source.source, source.flags);
+            } else if (source instanceof Date) {
+                dist = new Date(source);
             } else {
                 dist = new Object();
             }
-            cache.push([source, dist])
+            cache.push([source, dist]);
             for (let key in source) {
-                dist[key] = deepClone(source[key]);
+                if (Object.prototype.hasOwnProperty.call(source, key)) {
+                    dist[key] = deepClone(source[key]);
+                }
             }
             return dist;
         }

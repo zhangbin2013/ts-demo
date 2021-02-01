@@ -53,5 +53,38 @@ describe('deepClone', () => {
             assert(a.xxx === a2.xxx);
             assert(a.self !== a2.self);
         });
+        it('可以复制正则表达式', () => {
+            const a = /hi\d/gi;
+            a.xxx = {yyy: {zzz: 1}};
+            const a2 = deepClone(a);
+            assert(a.source === a2.source);
+            assert(a.flags === a2.flags);
+            assert(a !== a2);
+            assert(a.xxx.yyy !== a2.xxx.yyy);
+            assert(a.xxx.yyy.zzz === a2.xxx.yyy.zzz);
+        });
+        it('可以复制时间', () => {
+            const a = new Date();
+            a.xxx = {yyy: {zzz: 1}};
+            const a2 = deepClone(a);
+            assert(a.getTime() === a2.getTime());
+            assert(a !== a2);
+            assert(a.xxx.yyy !== a2.xxx.yyy);
+            assert(a.xxx.yyy.zzz === a2.xxx.yyy.zzz);
+        });
+
+        it('自动跳过原型属性', () => {
+            const a = Object.create({name: 'qw'});
+            a.xxx = {yyy: {zzz: 1}};
+            const a2 = deepClone(a);
+            assert.isFalse('name' in a2);
+            assert(a !== a2);
+            assert(a.xxx.yyy !== a2.xxx.yyy);
+            assert(a.xxx.yyy.zzz === a2.xxx.yyy.zzz);
+        });
+
+        it('复制复杂对象', fn => {
+
+        });
     });
 });
