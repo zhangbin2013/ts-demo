@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+      #contain {
+          width: 200px;
+          height: 200px;
+          background-color: burlywood;
+          margin: auto;
+      }
+	</style>
+</head>
+<body>
+<div id="contain"></div>
+<script>
+    let num = 1;
+    let oDiv = document.querySelector('#contain');
+    let changeNum = () => {
+        oDiv.innerHTML = num++;
+    };
+    let debounce = (fn, dely) => {
+        let timer = null;
+        return function (...args) {
+            if (timer) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(() => {
+                fn(...args);
+                console.log(this, ...args);
+            }, dely);
+        };
+    };
+    oDiv.onmousemove = debounce(changeNum, 300);
+</script>
+</body>
+</html>
